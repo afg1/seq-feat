@@ -1,4 +1,6 @@
-// use crate::stats::counts;
+#[cfg(test)]
+// use super::*;
+use crate::stats::{counts, fickett};
 
 #[test]
 fn test_gc_content() {

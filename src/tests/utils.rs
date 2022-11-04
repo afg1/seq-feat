@@ -1,4 +1,5 @@
-// use crate::utils::*;
+// #[cfg(test)]
+use crate::utils::*;
 
 #[test]
 fn test_seq_ok() {

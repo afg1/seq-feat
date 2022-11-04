@@ -1,6 +1,5 @@
 #[cfg(test)]
-use super::*;
-// use crate::orf::*;
+use crate::coding::*;
 
 #[test]
 fn test_no_orf() {
