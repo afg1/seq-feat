@@ -17,3 +17,5 @@ crate-type = ["cdylib"]
 wasm-bindgen = "0.2"
 regex = "1.0"
 lazy_static = "1.0"
+realfft = "3.0.2"
+rustfft = "6.0.1"
