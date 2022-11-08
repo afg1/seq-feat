@@ -1,6 +1,17 @@
+//! Functions for the calculation of entropy in sequences
 use itertools::Itertools;
 use std::collections::HashMap;
 
+/// Get the probability distributionn of kmers of given length
+///
+/// Iterates over the sequence in chinks of the given length and
+/// calculated the probability of observing each kmer. The kmer
+/// probabilities are returned as a hash map with the key being
+/// the kmer string itself, and the value the probability of
+/// observing it.
+///
+/// This function is used downstream in the entropy calculators
+///
 pub fn kmer_probabilities(seq: &str, kmer: u64) -> HashMap<String, f64> {
     let total_windows = (seq.len() as u64 - kmer + 1) as f64;
     let mut kmer_probs: HashMap<String, f64> = HashMap::new();
@@ -20,6 +31,14 @@ pub fn kmer_probabilities(seq: &str, kmer: u64) -> HashMap<String, f64> {
     kmer_probs
 }
 
+/// Calculate the Shannon entropy for a sequence, using given kmer length range
+///
+/// This function will repeatedly calculate the kmer probability distribution
+/// and then calculate the shannon entropy from it. You can end up with a
+/// number of entropies in the resulting Vec<f64>
+///
+/// Bear in mind that the kmer_max parameter will have a strong impact on
+/// the runtime of this function, probably factorial.
 pub fn shannon(seq: &str, kmer_max: u64) -> Vec<f64> {
     let mut entropy_list: Vec<f64> = Vec::new();
 
@@ -34,6 +53,14 @@ pub fn shannon(seq: &str, kmer_max: u64) -> Vec<f64> {
     entropy_list
 }
 
+/// Calculate the Tsallis entropy for a sequence, using given kmer length range
+///
+/// This function will repeatedly calculate the kmer probability distribution
+/// and then calculate the tsallis entropy from it. You can end up with a
+/// number of entropies in the resulting Vec<f64>
+///
+/// Bear in mind that the kmer_max parameter will have a strong impact on
+/// the runtime of this function, probably factorial.
 pub fn tsallis(seq: &str, kmer_max: u64) -> Vec<f64> {
     let mut entropy_list: Vec<f64> = Vec::new();
     let q = 2.0;
