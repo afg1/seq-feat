@@ -68,7 +68,7 @@ pub fn tsallis(seq: &str, kmer_max: u64) -> Vec<f64> {
     for kmer in 1..kmer_max + 1 {
         let kmer_probs = kmer_probabilities(seq, kmer);
         let entropy =
-            (1.0 / (1.0 - q)) * (1.0 - kmer_probs.iter().fold(0.0, |acc, x| acc + (x.1.powf(q))));
+            (1.0 / (q - 1.0)) * (1.0 - kmer_probs.iter().fold(0.0, |acc, x| acc + (x.1.powf(q))));
         entropy_list.push(entropy);
     }
 
