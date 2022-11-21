@@ -1,5 +1,5 @@
 use crate::utils::*;
-use regex::{Match, Regex};
+use regex::Regex;
 use wasm_bindgen::prelude::*;
 
 lazy_static! {
@@ -10,46 +10,33 @@ lazy_static! {
 }
 
 #[wasm_bindgen(js_name=orf_length)]
-pub fn length(seq: &str) -> Option<f64> {
+pub fn length(seq: &str) -> Option<usize> {
     let clean_seq = seq::clean(seq);
     let stops: Vec<&Regex> = vec![&TAA_STOP, &TAG_STOP, &TGA_STOP];
     let start_matches = AUG_START.find(&clean_seq);
-    let stop_matches = stops
+
+    let start_idx: Option<usize> = start_matches.map(|x| x.start());
+
+    let end_idx: Option<usize> = stops
         .into_iter()
         .map(|x| x.find(&clean_seq))
-        .collect::<Vec<Option<Match>>>();
+        .filter_map(|x| x.map(|y| y.end()))
+        .collect::<Vec<usize>>()
+        .into_iter()
+        .max();
+    println!("{:?} to {:?}", start_idx, end_idx);
 
-    let start_idx = match start_matches {
-        Some(x) => x.start() as i64,
-        None => -1,
-    };
-
-    let mut end_idx: i64 = -1;
-    for sm in stop_matches.iter() {
-        let end_idx_i: i64 = match sm {
-            Some(x) => x.end() as i64,
-            None => -1,
-        };
-        if end_idx_i > end_idx {
-            end_idx = end_idx_i;
-        }
-    }
-
-    // No start codon = no orf
-    if start_idx < 0 {
+    // No start codon, or no stop = no orf
+    if start_idx.is_none() || end_idx.is_none() {
         return None;
     }
 
-    // Stop before start, or no stop = no orf
+    // Stop before start = no orf
     if end_idx < start_idx {
         return None;
     }
 
-    let length = end_idx - start_idx;
-    println!("{} {}", length, length % 3);
-    println!("{}  {}", start_idx, end_idx);
-
-    Some(length as f64)
+    Some(end_idx.unwrap() - start_idx.unwrap())
 }
 
 #[cfg(test)]
@@ -70,8 +57,9 @@ mod test {
             orf::length(
                 "GGCAUGGAGUCCUGUGGUAUCCACGAGAUCACCUUCAACUCCAUCAUGAAGUGUGAUGUGGAUAUCCGCAAAGACCUGUAUGCC"
             ),
-            Some(46.0)
+            Some(46)
         );
-        assert_eq!(orf::length("AUGAGUGAUCAGCAGUUGGACUAUGCCUUAGACCUAAUGAGGCACCUACCUCCACAGCAAAUUGAGAAAAAGCUCAGCAACCUGAUUGACCUGAUCCCUCAUCUAUGUGAAGAUCUCUUGCCUUCUGUUAAUCAGAUAAUGAAAAUUGCCAGAGACAAGGAAGUGGGAAAGGAUUACCUUUUGUGUGACUGCAACAGAGAU"), Some(37.0));
+        assert_eq!(orf::length("AUGAGUGAUCAGCAGUUGGACUAUGCCUUAGACCUAAUGAGGCACCUACCUCCACAGCAAAUUGAGAAAAAGCUCAGCAACCUGAUUGACCUGAUCCCUCAUCUAUGUGAAGAUCUCUUGCCUUCUGUUAAUCAGAUAAUGAAAAUUGCCAGAGACAAGGAAGUGGGAAAGGAUUACCUUUUGUGUGACUGCAACAGAGAU")
+        , Some(37));
     }
 }
