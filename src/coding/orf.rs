@@ -10,7 +10,7 @@ lazy_static! {
 }
 
 #[wasm_bindgen(js_name=orf_length)]
-pub fn length(seq: &str) -> f64 {
+pub fn length(seq: &str) -> Option<f64> {
     let clean_seq = seq::clean(seq);
     let stops: Vec<&Regex> = vec![&TAA_STOP, &TAG_STOP, &TGA_STOP];
     let start_matches = AUG_START.find(&clean_seq);
@@ -37,17 +37,17 @@ pub fn length(seq: &str) -> f64 {
 
     // No start codon = no orf
     if start_idx < 0 {
-        return -1.0;
+        return None;
     }
 
     // Stop before start, or no stop = no orf
     if end_idx < start_idx {
-        return -1.0;
+        return None;
     }
 
     let length = end_idx - start_idx;
     println!("{} {}", length, length % 3);
     println!("{}  {}", start_idx, end_idx);
 
-    length as f64
+    Some(length as f64)
 }
