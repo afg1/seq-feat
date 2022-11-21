@@ -51,3 +51,27 @@ pub fn length(seq: &str) -> Option<f64> {
 
     Some(length as f64)
 }
+
+#[cfg(test)]
+mod test {
+    use crate::coding::orf;
+    #[test]
+    fn test_no_orf() {
+        // Test that the orf finder doesn't find an orf in a simple sequence
+        assert_eq!(orf::length("AAAAAAAA"), None);
+        assert_eq!(orf::length("CCCCCCCCC"), None);
+    }
+
+    #[test]
+    fn test_orf_exists() {
+        // Test some sequences from RNAcentral that had potential ORFs annotated by cpat
+        // The lengths are what this code determined, I need to run separate checks to be sure they're right
+        assert_eq!(
+            orf::length(
+                "GGCAUGGAGUCCUGUGGUAUCCACGAGAUCACCUUCAACUCCAUCAUGAAGUGUGAUGUGGAUAUCCGCAAAGACCUGUAUGCC"
+            ),
+            Some(46.0)
+        );
+        assert_eq!(orf::length("AUGAGUGAUCAGCAGUUGGACUAUGCCUUAGACCUAAUGAGGCACCUACCUCCACAGCAAAUUGAGAAAAAGCUCAGCAACCUGAUUGACCUGAUCCCUCAUCUAUGUGAAGAUCUCUUGCCUUCUGUUAAUCAGAUAAUGAAAAUUGCCAGAGACAAGGAAGUGGGAAAGGAUUACCUUUUGUGUGACUGCAACAGAGAU"), Some(37.0));
+    }
+}

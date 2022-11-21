@@ -68,3 +68,13 @@ pub fn get_phased_counts(seq: &str, phase: usize) -> (f64, f64, f64, f64) {
 
     (phase_a, phase_c, phase_g, phase_u)
 }
+
+#[cfg(test)]
+mod test {
+    use crate::stats::counts;
+    #[test]
+    fn test_gc_content() {
+        assert_eq!(counts::gc_content("GGGGGGCCCCCC"), 1.0);
+        assert_eq!(counts::gc_content("GGGGGGAAAAAA"), 0.5);
+    }
+}
