@@ -1,4 +1,3 @@
-use crate::utils::*;
 use wasm_bindgen::prelude::*;
 
 /// Get the fraction of the sequence that is either a G or C
@@ -7,35 +6,30 @@ use wasm_bindgen::prelude::*;
 /// This function simply counts the ocurrences of each
 /// character and divides by the total sequence length.
 #[wasm_bindgen(js_name=gc_content)]
-pub fn gc_content(seq: &str) -> f64 {
-    let clean_seq = seq::clean(seq);
-    let num_c = c_content(&clean_seq);
-    let num_g = g_content(&clean_seq);
+pub fn gc_content(clean_seq: &str) -> f64 {
+    let num_c = c_content(clean_seq);
+    let num_g = g_content(clean_seq);
 
     (num_c + num_g) / clean_seq.len() as f64
 }
 
 /// Calculate the number of A nucleotides in a sequence
-pub fn a_content(seq: &str) -> f64 {
-    let clean_seq: String = seq::clean(seq);
+pub fn a_content(clean_seq: &str) -> f64 {
     clean_seq.matches('A').count() as f64
 }
 
 /// Calculate the number of C nucleotides in a sequence
-pub fn c_content(seq: &str) -> f64 {
-    let clean_seq: String = seq::clean(seq);
+pub fn c_content(clean_seq: &str) -> f64 {
     clean_seq.matches('C').count() as f64
 }
 
 /// Calculate the number of G nucleotides in a sequence
-pub fn g_content(seq: &str) -> f64 {
-    let clean_seq: String = seq::clean(seq);
+pub fn g_content(clean_seq: &str) -> f64 {
     clean_seq.matches('G').count() as f64
 }
 
 /// Calculate the number of U nucleotides in a sequence
-pub fn u_content(seq: &str) -> f64 {
-    let clean_seq: String = seq::clean(seq);
+pub fn u_content(clean_seq: &str) -> f64 {
     clean_seq.matches('U').count() as f64
 }
 
