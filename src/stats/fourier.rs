@@ -90,9 +90,6 @@ pub fn fft_sequence<
     let mut spectrum = r2c.make_output_vec();
 
     r2c.process(&mut indata, &mut spectrum)?;
-
-    // println!("{:?}", spectrum.iter().map(|x| x.powu(2).re ).collect::<Vec<T>>());
-
     Ok(spectrum)
 }
 
