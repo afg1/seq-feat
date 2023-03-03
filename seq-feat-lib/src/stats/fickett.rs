@@ -134,8 +134,6 @@ pub fn score(seq: &str) -> f64 {
             .reduce(f64::min)
             .unwrap();
 
-    println!("{} {} {} {}", pos_a, pos_c, pos_g, pos_u);
-
     // In the CPC2 code, they sum the phased nt counts, but that would just equal the same as counting in unphased
     // I don't think I need to redo the content counting
 

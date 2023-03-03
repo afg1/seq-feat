@@ -11,7 +11,7 @@ lazy_static! {
 
 #[wasm_bindgen(js_name=orf_length)]
 pub fn length(seq: &str) -> Option<usize> {
-    let clean_seq = seq::clean(seq);
+    let clean_seq = seq::clean(seq).ok().unwrap();
     let stops: Vec<&Regex> = vec![&TAA_STOP, &TAG_STOP, &TGA_STOP];
     let start_matches = AUG_START.find(&clean_seq);
 

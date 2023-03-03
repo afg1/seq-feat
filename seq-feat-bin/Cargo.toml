@@ -1,0 +1,11 @@
+[package]
+name = "feat_extract"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.69"
+bio = "1.1.0"
+clap = { version = "4.1.8", features = ["derive"] }
+polars = { version = "0.27.2", features = ["parquet"] }
+seq_feat = { path = "../seq-feat-lib" }

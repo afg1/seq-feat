@@ -1,5 +1,5 @@
+use anyhow::{anyhow, Result};
 use regex::{Match, Regex};
-
 lazy_static! {
     pub static ref SEQ_CHECK: Regex = Regex::new(r"[[:alpha:]&&[^ACTGU]]").unwrap();
 }
@@ -15,9 +15,9 @@ lazy_static! {
 /// # Examples
 /// ```
 /// # fn main() {
-/// use utils::seq::*;
-/// let good_seq = "AAAGGGUUUCCC"
-/// let bad_seq  = "NNNNNNNNNNNN"
+/// use seq_feat::utils::seq::is_ok;
+/// let good_seq = "AAAGGGUUUCCC";
+/// let bad_seq  = "NNNNNNNNNNNN";
 ///
 /// let good = is_ok(&good_seq); // true
 /// let bad = is_ok(&bad_seq); //false
@@ -47,25 +47,26 @@ pub fn is_ok(seq: &str) -> bool {
 ///
 /// # Examples
 /// ```
-/// use utils::clean;
+/// use seq_feat::utils::seq::clean;
 /// let seq = "aaagggtttccc";
 /// let clean_seq = clean(&seq);
 /// // clean_seq should be AAAGGGTTTCCC
 /// ```
 ///
 /// ```
-/// use utils::clean;
-/// let seq = "AGCTNNNTAG"
+/// use seq_feat::utils::seq::clean;
+/// let seq = "AGCTNNNTAG";
 /// let clean_seq = clean(&seq);
-/// // This will panic! We don't handle ambiguous bases yet
+/// // This will give an error! We don't handle ambiguous bases yet
 /// ```
-pub fn clean(seq: &str) -> String {
+pub fn clean(seq: &str) -> Result<String> {
     // Clean up the sequence to be only RNA and uppercase
     let uc_seq: String = seq.to_uppercase().replace('T', "U");
     if !is_ok(&uc_seq) {
-        panic!("Invalid sequence passed to cleaner");
+        Err(anyhow!("Invalid characters found in sequence"))
+    } else {
+        Ok(uc_seq)
     }
-    uc_seq
 }
 
 #[cfg(test)]
@@ -79,6 +80,15 @@ mod test {
 
     #[test]
     fn test_seq_clean() {
-        assert_eq!(seq::clean("actccc"), "ACUCCC");
+        assert_eq!(seq::clean("actccc").unwrap(), "ACUCCC");
+    }
+
+    /// Make sure the cleaner gives an error when finding invalid sequences
+    #[test]
+    fn test_seq_clean_invalid() {
+        assert_eq!(
+            seq::clean("actnnccc").err().unwrap().to_string(),
+            "Invalid characters found in sequence"
+        );
     }
 }
