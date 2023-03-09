@@ -14,16 +14,12 @@ pub fn seq_2_binary(seq: &str) -> (Vec<i64>, Vec<i64>, Vec<i64>, Vec<i64>) {
     binary_u.resize(len, 0);
 
     seq.match_indices('A')
-        .into_iter()
         .for_each(|(idx, _)| binary_a[idx] = 1);
     seq.match_indices('C')
-        .into_iter()
         .for_each(|(idx, _)| binary_c[idx] = 1);
     seq.match_indices('G')
-        .into_iter()
         .for_each(|(idx, _)| binary_g[idx] = 1);
     seq.match_indices('U')
-        .into_iter()
         .for_each(|(idx, _)| binary_u[idx] = 1);
 
     (binary_a, binary_c, binary_g, binary_u)
@@ -35,16 +31,12 @@ pub fn seq_2_integer(seq: &str) -> Vec<i64> {
     integer_seq.resize(len, 0);
 
     seq.match_indices('A')
-        .into_iter()
         .for_each(|(idx, _)| integer_seq[idx] = 1);
     seq.match_indices('C')
-        .into_iter()
         .for_each(|(idx, _)| integer_seq[idx] = 2);
     seq.match_indices('G')
-        .into_iter()
         .for_each(|(idx, _)| integer_seq[idx] = 3);
     seq.match_indices('U')
-        .into_iter()
         .for_each(|(idx, _)| integer_seq[idx] = 4);
 
     integer_seq
@@ -56,16 +48,12 @@ pub fn seq_2_real(seq: &str) -> Vec<f64> {
     float_seq.resize(len, 0.0);
 
     seq.match_indices('A')
-        .into_iter()
         .for_each(|(idx, _)| float_seq[idx] = -1.5);
     seq.match_indices('C')
-        .into_iter()
         .for_each(|(idx, _)| float_seq[idx] = 0.5);
     seq.match_indices('G')
-        .into_iter()
         .for_each(|(idx, _)| float_seq[idx] = -0.5);
     seq.match_indices('U')
-        .into_iter()
         .for_each(|(idx, _)| float_seq[idx] = 1.5);
 
     float_seq
